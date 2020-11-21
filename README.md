@@ -1,2 +1,4 @@
 # netty-springboot
 springboot集成netty 依赖注入
+server端需使用application启动 因为注入了businessHandler
+client只是main方法启动就可以
