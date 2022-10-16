@@ -10,7 +10,7 @@ import org.springframework.boot.web.support.SpringBootServletInitializer;
  * @date 2018-11-16
  */
 @SpringBootApplication(
-         scanBasePackages = {"com.netty.**"}
+         scanBasePackages = {"com.netty.nettyServer.**"}
 )
 public class Application extends SpringBootServletInitializer {
 

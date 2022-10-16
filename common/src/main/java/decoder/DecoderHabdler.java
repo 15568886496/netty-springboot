@@ -1,12 +1,11 @@
-package com.netty.nettyServer.decoder;
+package decoder;
 
-import com.netty.common.TestPctProtocol;
+import common.TestPctProtocol;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
-import org.apache.log4j.Logger;
-
 import java.util.List;
+import org.apache.log4j.Logger;
 
 public class DecoderHabdler extends ByteToMessageDecoder {
     private Logger logger = Logger.getLogger(this.getClass());

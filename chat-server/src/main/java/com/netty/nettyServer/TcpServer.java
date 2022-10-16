@@ -1,8 +1,8 @@
 package com.netty.nettyServer;
 
 import com.netty.nettyServer.businessHandler.BusinessHandler;
-import com.netty.nettyServer.decoder.DecoderHabdler;
-import com.netty.nettyServer.encoder.EncoderHandler;
+import decoder.DecoderHabdler;
+import encoder.EncoderHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -13,22 +13,21 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.handler.logging.LoggingHandler;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import lombok.extern.log4j.Log4j;
-import org.springframework.stereotype.Component;
-
-import javax.annotation.PreDestroy;
 import java.nio.ByteOrder;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import javax.annotation.PreDestroy;
+import lombok.extern.log4j.Log4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 @Component
 @Log4j
 public class TcpServer {
 
     @Autowired
-    BusinessHandler testBusinessHandler;
+    private BusinessHandler businessHandler;
 
     @Value("${netty.tcp.listener.port:20000}")
     private  int port=20000;
@@ -51,7 +50,7 @@ public class TcpServer {
                     ch.pipeline().addLast("logging",new LoggingHandler("DEBUG"));//设置log监听器，并且日志级别为debug，方便观察运行流程
                     ch.pipeline().addLast("encode",new EncoderHandler());//编码器。发送消息时候用
                     ch.pipeline().addLast("decode",new DecoderHabdler());//解码器，接收消息时候用
-                    ch.pipeline().addLast("handler",testBusinessHandler);//业务处理类，最终的消息会在这个handler中进行业务处理
+                    ch.pipeline().addLast("handler",businessHandler);//业务处理类，最终的消息会在这个handler中进行业务处理
                 }
             });
             bootstrap.option(ChannelOption.SO_BACKLOG,1024);//缓冲区

@@ -1,6 +1,6 @@
-package com.netty.nettyServer.encoder;
+package encoder;
 
-import com.netty.common.TestPctProtocol;
+import common.TestPctProtocol;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;

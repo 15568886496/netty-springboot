@@ -1,12 +1,10 @@
 package com.netty.nettyServer.businessHandler;
 
-import com.netty.common.TestPctProtocol;
 import com.netty.nettyServer.TcpServer;
-import com.sun.tools.internal.ws.wsdl.document.Service;
+import common.TestPctProtocol;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.util.CharsetUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 
@@ -20,7 +18,6 @@ public class BusinessHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         super.channelActive(ctx);
-
         System.out.print("客户端"+getRemoteAddress(ctx)+" 接入连接");
         //往channel map中添加channel信息
         TcpServer.getMap().put(getIPString(ctx), ctx.channel());

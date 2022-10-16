@@ -1,8 +1,8 @@
-package com.netty.client;
+package client;
 
-import com.netty.client.echo.TestBusinessHandler;
-import com.netty.nettyServer.decoder.DecoderHabdler;
-import com.netty.nettyServer.encoder.EncoderHandler;
+import client.echo.TestBusinessHandler;
+import decoder.DecoderHabdler;
+import encoder.EncoderHandler;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;

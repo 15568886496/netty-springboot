@@ -1,4 +1,4 @@
-package com.netty.common;
+package common;
 
 
 import lombok.Data;
