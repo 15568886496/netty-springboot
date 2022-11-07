@@ -4,7 +4,9 @@ import common.TestPctProtocol;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.util.CharsetUtil;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class TestBusinessHandler extends ChannelInboundHandlerAdapter {
 
 
@@ -12,7 +14,7 @@ public class TestBusinessHandler extends ChannelInboundHandlerAdapter {
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         TestPctProtocol testPctProtocolReveive = new TestPctProtocol();
         if(msg instanceof Object){
-            testPctProtocolReveive = (TestPctProtocol)msg;
+            log.info("customer receive message {}",new String(((TestPctProtocol) msg).getData(),"utf-8"));
         }else{
             return;
         }
@@ -33,6 +35,12 @@ public class TestBusinessHandler extends ChannelInboundHandlerAdapter {
         testPctProtocol.setData(message.getBytes(CharsetUtil.UTF_8));
 
         ctx.writeAndFlush(testPctProtocol);
+    }
+
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+        cause.printStackTrace();
+        ctx.close();
     }
 
 }
