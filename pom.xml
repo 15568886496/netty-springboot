@@ -9,6 +9,7 @@
 		<module>chat-client</module>
 		<module>common</module>
 		<module>chat-server</module>
+		<module>webSocketServer</module>
 	</modules>
 	<packaging>pom</packaging>
 

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>MyukiDanMu演示</title>
+		<link rel="stylesheet" href="css/MyukiDanMu.css" />
+		<script type="text/javascript" src="js/MyukiDanMu.js"></script>
+	</head>
+	<style>
+		body {
+			/* background-color: #c8d6e5; */
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+
+		.form-box {
+			display: flex;
+			flex-direction: column;
+			margin-top: 32px;
+			width: 100%;
+		}
+
+		.form-box textarea {
+			padding: 16px;
+			margin-bottom: 12px;
+			outline: none;
+			border-radius: 16px;
+			font-size: 24px;
+			height: 50px;
+			border: none;
+			box-shadow: inset 0px 0px 8px #576574;
+		}
+
+		.form-box #tucao {
+			padding: 8px;
+			outline: none;
+			cursor: pointer;
+			background-color: #576574;
+			border-radius: 8px;
+			font-size: 24px;
+			color: white;
+			font-weight: bold;
+			text-align: center;
+			transition: all .35s ease;
+		}
+
+		#tucao:hover {
+			box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.6);
+		}
+
+		.AwesomeDanMu {
+			height: 250px;
+			width: 100%;
+		}
+		.container{
+			width: 80%;
+			height: 100%;
+		}
+		h1{
+			text-align: center;
+			line-height: 1;
+			padding: 32px;
+		}
+	</style>
+	<body>
+		<div class="container">
+			<h1>MyukiDanMu测试</h1>
+			<div class="AwesomeDanMu"></div>
+			<div class="form-box">
+				<textarea name="" id="tucaotext" cols="30" rows="10"></textarea>
+				<div id="tucao">吐槽一下</div>
+			</div>
+		</div>
+
+		<script>
+			const LISAO = `帝高阳之苗裔兮，朕皇考曰伯庸。
+			
+			既莫足与为美政兮，吾将从彭咸之所居！`
+			let colors = ['#ff4757','#ff7f50','#eccc68','#7bed9f','#2ed573','#1e90ff','#5352ed','#2f3542','#fd79a8','#6c5ce7','#63cdda','#2bcbba'];
+
+			let list = LISAO.split(/\s+/);
+			let avatars = ['./img/avatar1.jpg', './img/avatar2.png'];
+			let DanMuPool = [];
+			var ws;
+			var wsServer = "ws://127.0.0.1:9090/ws";
+			var closeConnect = false;
+
+			for (let i = 0; i < list.length; i++) {
+				let item = {
+					danmu: '我是一条弹幕',
+					color: colors[Math.floor(Math.random() * colors.length)],
+					href: '#' + new Date().getTime(),
+					avatar: './img/avatar1.jpg',
+				};
+				item.danmu = list[i];
+				item.color = colors[Math.floor(Math.random() * colors.length)];
+				item.href = '#' + new Date().getTime();
+				item.avatar = avatars[Math.floor(Math.random() * avatars.length)];
+				DanMuPool.push(item);
+			}
+			window.danmu = $MDM({
+				locate: '.AwesomeDanMu',
+				maxDanMuWidth: 300,
+				pool: DanMuPool,
+				curtain: 'url(./img/curtain.jpg)',
+				});
+			// danmu.shotPool(DanMuPool);
+
+			document.getElementById('tucao').onclick = function() {
+				let tucao = document.getElementById('tucaotext').value;
+				// danmu.say(tucao); 
+				document.getElementById('tucaotext').value = '';
+				if(closeConnect){
+					// 进行重连
+					initSocket(wsServer);
+					closeConnect = false;
+				}
+				setTimeout(function (){
+					ws.send(tucao);
+				},2000);
+				// danmu.shot({
+				// 	avatar: './img/avatar.jpg',
+				// 	danmu: tucao
+				// })
+			}
+			document.getElementById('tucaotext').onkeyup = function() {
+				event.preventDefault();
+				if(event.keyCode === 13){
+					document.getElementById('tucao').click();
+				}
+			}
+			initSocket(wsServer);
+			function initSocket(service) {
+				//申请一个WebSocket对象，参数是服务端地址，同http协议使用http://开头一样，WebSocket协议的url使用ws://开头，另外安全的WebSocket协议使用wss://开头
+				ws = new WebSocket(service);
+				ws.onopen = function(){
+					//当WebSocket创建成功时，触发onopen事件
+					console.log("websocket连接成功");
+					//ws.send("hello"); //将消息发送到服务端
+				}
+				ws.onmessage = function(e){
+					//当客户端收到服务端发来的消息时，触发onmessage事件，参数e.data包含server传递过来的数据
+					console.log("收到数据");
+					console.log(e.data);
+					danmu.shot({
+						avatar: './img/avatar.jpg',
+						danmu: e.data
+					})
+				}
+				ws.onclose = function(e){
+					//当客户端收到服务端发送的关闭连接请求时，触发onclose事件
+					console.log("websocket已断开");
+					closeConnect = true;
+				}
+				ws.onerror = function(e){
+					//如果出现连接、处理、接收、发送数据失败的时候触发onerror事件
+					console.log("websocket发生错误"+error);
+					closeConnect = true;
+				}
+			}
+		</script>
+	</body>
+</html>
