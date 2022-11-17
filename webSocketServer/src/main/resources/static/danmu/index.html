@@ -65,7 +65,7 @@
 	</style>
 	<body>
 		<div class="container">
-			<h1>MyukiDanMu测试</h1>
+			<h1>实时弹幕</h1>
 			<div class="AwesomeDanMu"></div>
 			<div class="form-box">
 				<textarea name="" id="tucaotext" cols="30" rows="10"></textarea>
@@ -83,7 +83,8 @@
 			let avatars = ['./img/avatar1.jpg', './img/avatar2.png'];
 			let DanMuPool = [];
 			var ws;
-			var wsServer = "ws://127.0.0.1:9090/ws";
+			// var wsServer = "ws://127.0.0.1:9090/ws";
+			var wsServer = "ws://ec2-44-211-70-171.compute-1.amazonaws.com:9090/ws";
 			var closeConnect = false;
 
 			for (let i = 0; i < list.length; i++) {
@@ -143,10 +144,12 @@
 					//当客户端收到服务端发来的消息时，触发onmessage事件，参数e.data包含server传递过来的数据
 					console.log("收到数据");
 					console.log(e.data);
-					danmu.shot({
-						avatar: './img/avatar.jpg',
-						danmu: e.data
-					})
+					if(e.data){
+						danmu.shot({
+							avatar: './img/avatar.jpg',
+							danmu: e.data
+						})
+					}
 				}
 				ws.onclose = function(e){
 					//当客户端收到服务端发送的关闭连接请求时，触发onclose事件
@@ -159,6 +162,9 @@
 					closeConnect = true;
 				}
 			}
+			window.setInterval(function (){
+				ws.send('');
+			},3000);
 		</script>
 	</body>
 </html>
