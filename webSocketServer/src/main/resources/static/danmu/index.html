@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="utf-8" />
-		<title>MyukiDanMu演示</title>
+		<title>Netty弹幕</title>
 		<link rel="stylesheet" href="css/MyukiDanMu.css" />
 		<script type="text/javascript" src="js/MyukiDanMu.js"></script>
 	</head>
@@ -17,17 +17,17 @@
 		.form-box {
 			display: flex;
 			flex-direction: column;
-			margin-top: 32px;
+			margin-top: calc(3vh);
 			width: 100%;
 		}
 
 		.form-box textarea {
 			padding: 16px;
-			margin-bottom: 12px;
+			margin-bottom: calc(1vh);
 			outline: none;
 			border-radius: 16px;
 			font-size: 24px;
-			height: 50px;
+			height: calc(5vh);
 			border: none;
 			box-shadow: inset 0px 0px 8px #576574;
 		}
@@ -50,7 +50,7 @@
 		}
 
 		.AwesomeDanMu {
-			height: 250px;
+			height: calc(70vh);
 			width: 100%;
 		}
 		.container{
@@ -65,22 +65,20 @@
 	</style>
 	<body>
 		<div class="container">
-			<h1>实时弹幕</h1>
+<!--			<h1>Netty实时弹幕</h1>-->
 			<div class="AwesomeDanMu"></div>
 			<div class="form-box">
 				<textarea name="" id="tucaotext" cols="30" rows="10"></textarea>
-				<div id="tucao">吐槽一下</div>
+				<div id="tucao">发送你的新年愿望吧</div>
 			</div>
 		</div>
 
 		<script>
-			const LISAO = `帝高阳之苗裔兮，朕皇考曰伯庸。
-			
-			既莫足与为美政兮，吾将从彭咸之所居！`
+			const LISAO = `欢迎大家参加Netty的交流会	祝大家在2023年可以事业腾飞！`
 			let colors = ['#ff4757','#ff7f50','#eccc68','#7bed9f','#2ed573','#1e90ff','#5352ed','#2f3542','#fd79a8','#6c5ce7','#63cdda','#2bcbba'];
 
 			let list = LISAO.split(/\s+/);
-			let avatars = ['./img/avatar1.jpg', './img/avatar2.png'];
+			let avatars = ['./img/logo.png', './img/logo1.png'];
 			let DanMuPool = [];
 			var ws;
 			// var wsServer = "ws://127.0.0.1:9090/ws";
@@ -92,7 +90,7 @@
 					danmu: '我是一条弹幕',
 					color: colors[Math.floor(Math.random() * colors.length)],
 					href: '#' + new Date().getTime(),
-					avatar: './img/avatar1.jpg',
+					avatar: './img/logo.jpg',
 				};
 				item.danmu = list[i];
 				item.color = colors[Math.floor(Math.random() * colors.length)];
@@ -104,7 +102,7 @@
 				locate: '.AwesomeDanMu',
 				maxDanMuWidth: 300,
 				pool: DanMuPool,
-				curtain: 'url(./img/curtain.jpg)',
+				curtain: 'url(./img/epamBackground.png)',
 				});
 			// danmu.shotPool(DanMuPool);
 
@@ -146,7 +144,7 @@
 					console.log(e.data);
 					if(e.data){
 						danmu.shot({
-							avatar: './img/avatar.jpg',
+							avatar: avatars[Math.floor(Math.random() * avatars.length)],
 							danmu: e.data
 						})
 					}

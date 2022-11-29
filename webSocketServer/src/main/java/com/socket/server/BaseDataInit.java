@@ -18,8 +18,11 @@ import org.springframework.stereotype.Component;
 public class BaseDataInit implements CommandLineRunner {
 
 
-    @Autowired
-    WebSocketServer tcpServer;
+    final WebSocketServer tcpServer;
+
+    public BaseDataInit(WebSocketServer tcpServer) {
+        this.tcpServer = tcpServer;
+    }
 
 
     @SneakyThrows

@@ -18,8 +18,11 @@ import org.springframework.stereotype.Component;
 public class BaseDataInit implements CommandLineRunner {
 
 
-    @Autowired
-    TcpServer tcpServer;
+    final TcpServer tcpServer;
+
+    public BaseDataInit(TcpServer tcpServer) {
+        this.tcpServer = tcpServer;
+    }
 
 
     @SneakyThrows

@@ -6,10 +6,8 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.util.CharsetUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 
 
-@Component
 @io.netty.channel.ChannelHandler.Sharable
 @Slf4j
 public class BusinessHandler extends ChannelInboundHandlerAdapter {

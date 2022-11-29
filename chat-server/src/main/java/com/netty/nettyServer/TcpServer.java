@@ -31,9 +31,6 @@ import org.springframework.stereotype.Component;
 @Log4j
 public class TcpServer {
 
-    @Autowired
-    private BusinessHandler businessHandler;
-
     @Value("${netty.tcp.listener.port:20000}")
     private  int port=20000;
     private static Map<String, Channel> map = new ConcurrentHashMap<String, Channel>();
@@ -56,7 +53,7 @@ public class TcpServer {
                     ch.pipeline().addLast("encode",new EncoderHandler());//编码器。发送消息时候用
                     ch.pipeline().addLast("decode",new DecoderHabdler());//解码器，接收消息时候用
 //                    ch.pipeline().addLast("handler",new IdleStateHandler(3, 0, 0, TimeUnit.SECONDS));//心跳
-                    ch.pipeline().addLast("handler",businessHandler);//业务处理类，最终的消息会在这个handler中进行业务处理
+                    ch.pipeline().addLast("handler",new BusinessHandler());//业务处理类，最终的消息会在这个handler中进行业务处理
                 }
             });
             bootstrap.option(ChannelOption.SO_BACKLOG,1024);//缓冲区
