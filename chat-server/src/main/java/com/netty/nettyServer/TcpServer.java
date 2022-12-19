@@ -1,7 +1,7 @@
 package com.netty.nettyServer;
 
 import com.netty.nettyServer.businessHandler.BusinessHandler;
-import common.TestPctProtocol;
+import com.netty.nettyServer.businessHandler.HearBeatHandler;
 import decoder.DecoderHabdler;
 import encoder.EncoderHandler;
 import io.netty.bootstrap.ServerBootstrap;
@@ -15,15 +15,11 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.timeout.IdleStateHandler;
-import io.netty.util.CharsetUtil;
 import java.nio.ByteOrder;
 import java.util.Map;
-import java.util.Scanner;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
 import javax.annotation.PreDestroy;
 import lombok.extern.log4j.Log4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -46,13 +42,13 @@ public class TcpServer {
             bootstrap.channel(NioServerSocketChannel.class);//配置为NIO的socket通道
             bootstrap.childHandler(new ChannelInitializer<SocketChannel>() {
                 protected void initChannel(SocketChannel ch) throws Exception {//绑定通道参数
-                    //在官方提供的示例中，Length是0x000C，高位在前，低位在后 但是报文给的是低位在前 高位在后
-                    //解决粘包问题  释义：读第72个字节后面的4个字节 来截取报文的长度
+                    //解决粘包问题  释义：读第2个字节后面的4个字节 来截取报文的长度
                     ch.pipeline().addLast("chaiBao",new LengthFieldBasedFrameDecoder(ByteOrder.LITTLE_ENDIAN,Integer.MAX_VALUE,2,4,0,0,true));
                     ch.pipeline().addLast("logging",new LoggingHandler("DEBUG"));//设置log监听器，并且日志级别为debug，方便观察运行流程
                     ch.pipeline().addLast("encode",new EncoderHandler());//编码器。发送消息时候用
                     ch.pipeline().addLast("decode",new DecoderHabdler());//解码器，接收消息时候用
-//                    ch.pipeline().addLast("handler",new IdleStateHandler(3, 0, 0, TimeUnit.SECONDS));//心跳
+                    ch.pipeline().addLast("idle",new IdleStateHandler(6,12,18));
+                    ch.pipeline().addLast("idleEvent",new HearBeatHandler());
                     ch.pipeline().addLast("handler",new BusinessHandler());//业务处理类，最终的消息会在这个handler中进行业务处理
                 }
             });
